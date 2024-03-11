@@ -126,7 +126,7 @@ phrases = process_sentences(main_idea)
 
 phrases_list = sequence_phrases(phrases)
 Last_Phrase=""
-Rus_prompt = add_phrases_to_string(Last_Phrase,phrases_list)
+Rus_prompt = add_phrases_to_string(Last_Phrase, phrases_list)
 print(Rus_prompt)
 
 Translated_prompt = translate_to_english(Rus_prompt)
