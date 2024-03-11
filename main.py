@@ -4,15 +4,7 @@ from googletrans import Translator
 # Загрузка модели языка
 nlp = spacy.load("en_core_web_sm")
 
-#Перевод фразы
-def translate_to_english(text):
-    translator = Translator()
-    translated_text = translator.translate(text, dest='en')
-    return translated_text.text
-
-
-
-def extract_main_idea(text):
+def _list_sentensis(text):
     # Обработка текста с помощью spaCy
     doc = nlp(text)
 
@@ -22,7 +14,7 @@ def extract_main_idea(text):
     # Цикл по предложениям для поиска ключевой информации
     for sentence in doc.sents:
         for token in sentence:
-            if token.text.lower() in ["волосы", "рост", "кожа", "глаза", "лицо"]:
+            if token.text.lower() in ["волосы", "рост", "кожа", "глаза", "лицо", "конечности"]:
                 key_phrases.append(sentence.text)
 
     # Удаление всех пустых строк
@@ -42,9 +34,9 @@ def process_sentences(sentences):
     phrases = []
 
     # Слова-союзы и слова-предлоги
-    conjunctions = ['и', 'а', 'но', 'или', 'либо', 'что', 'как',
-                    'между', 'над', 'под', 'за', 'перед', 'на', 'с', 'у',
-                    'от', 'до', 'в', 'из', 'о', 'по']
+    conjunctions = ['и', 'а', 'но', 'или', 'либо', 'что', 'у',
+                    'между', 'над', 'под', 'за', 'перед',
+                    'от', 'до', 'в', 'из', 'о', 'с', 'по' ]
 
     for sentence in sentences:
         # Разделение предложения на фразы по запятым
@@ -88,8 +80,8 @@ def process_sentences(sentences):
 
     return new_phrases
 
-#
-def check_phrases(phrases):
+#Задание последовательности фраз
+def sequence_phrases(phrases):
     phrases_to_move = []
 
     for phrase in phrases:
@@ -107,21 +99,35 @@ def check_phrases(phrases):
 
     return phrases
 
-#Объединение Промпта
+#Объединение в Промпт
 def add_phrases_to_string(input_string, phrases):
     phrases_string = ', '.join(phrases)
     output_string = input_string + ', ' + phrases_string
     return output_string
 
+#Перевод фразы
+def translate_to_english(text):
+    translator = Translator()
+    translated_text = translator.translate(text, dest='en')
+    return translated_text.text
 
-# Пример использования
+
+# Пример фразы
 input_text = """
 Высокий прямоходящий муравей-химера с преобладанием черт гепарда. Конечности сегментированы, как у насекомого, ступни и ладони четырёхпалые с парными когтями. Туловище сухое мускулистое, с длинными жилами. Основной окрас желтый, на бёдрах и груди белый мех с черными леопардовыми пятнышками. Волосы малиновые короткие, на лице-морде слезные дорожки, как у гепарда. Из одежды на Читу только обрезанные джинсовые мини-шортики.
 """
 
 
 
-main_idea = extract_main_idea(input_text)
+main_idea = _list_sentensis(input_text)
 print("Основная мысль текста с описанием внешности персонажа:")
-for phrase in main_idea:
-    print(phrase)
+
+phrases = process_sentences(main_idea)
+
+phrases_list = sequence_phrases(phrases)
+zero_Phrase=""
+Rus_prompt = add_phrases_to_string(zero_Phrase,phrases_list)
+print(Rus_prompt)
+
+Translated_prompt = translate_to_english(Rus_prompt)
+print("Английский промпт:\n"+Translated_prompt)
