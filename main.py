@@ -102,7 +102,7 @@ def sequence_phrases(phrases):
 #Объединение в Промпт
 def add_phrases_to_string(input_string, phrases):
     phrases_string = ', '.join(phrases)
-    output_string = input_string + ', ' + phrases_string
+    output_string = phrases_string + ', ' + input_string
     return output_string
 
 #Перевод фразы
@@ -125,8 +125,8 @@ print("Основная мысль текста с описанием внешн
 phrases = process_sentences(main_idea)
 
 phrases_list = sequence_phrases(phrases)
-zero_Phrase=""
-Rus_prompt = add_phrases_to_string(zero_Phrase,phrases_list)
+Last_Phrase=""
+Rus_prompt = add_phrases_to_string(Last_Phrase,phrases_list)
 print(Rus_prompt)
 
 Translated_prompt = translate_to_english(Rus_prompt)
