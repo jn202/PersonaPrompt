@@ -21,7 +21,7 @@ def paste_text():
     input_text.insert("1.0", clipboard_text)
 
 root = Tk()
-root.title("")
+root.title("PersonaPrompt")
 root.geometry("400x600")
 
 input_height = int(root.winfo_height() * 0.3)
