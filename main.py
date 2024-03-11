@@ -29,6 +29,55 @@ def extract_main_idea(text):
     return key_phrases
 
 
+def process_sentences(sentences):
+    phrases = []
+
+    # Слова-союзы и слова-предлоги
+    conjunctions = ['и', 'а', 'но', 'или', 'либо', 'что', 'как',
+                    'между', 'над', 'под', 'за', 'перед', 'на', 'с', 'у',
+                    'от', 'до', 'в', 'из', 'о', 'по']
+
+    for sentence in sentences:
+        # Разделение предложения на фразы по запятым
+        split_phrases = sentence.split(',')
+
+        # Объединение фраз с исключением, если после запятой идет слово "как"
+        new_phrase = split_phrases[0]
+        for phrase in split_phrases[1:]:
+            if phrase.strip().startswith('как '):
+                # Если после запятой идет "как", то объединяем фразы без разделения
+                new_phrase += ',' + phrase
+            else:
+                # Добавляем фразу в список фраз
+                phrases.append(new_phrase)
+                new_phrase = phrase
+
+        # Добавляем последнюю фразу в список фраз
+        phrases.append(new_phrase.strip())
+
+    # Удаление предлогов или союзов в начале фразы и точек в конце словосочетаний
+    new_phrases = []
+    for phrase in phrases:
+        # Разделение фразы на слова
+        words = phrase.split()
+
+        # Проверка, является ли первое слово предлогом или союзом
+        if words and words[0].lower() in conjunctions:
+            # Удаление предлога или союза в начале фразы
+            words = words[1:]
+
+        # Удаление точки в конце, если таковая имеется
+        last_word = words[-1]
+        if last_word.endswith('.'):
+            words[-1] = last_word.rstrip('.')
+
+        # Формирование фразы
+        new_phrase = ' '.join(words)
+
+        # Добавление фразы в новый список
+        new_phrases.append(new_phrase)
+
+    return new_phrases
 
 
 # Пример использования
