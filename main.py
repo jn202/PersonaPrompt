@@ -1,7 +1,16 @@
 import spacy
+from googletrans import Translator
 
 # Загрузка модели языка
 nlp = spacy.load("en_core_web_sm")
+
+#Перевод фразы
+def translate_to_english(text):
+    translator = Translator()
+    translated_text = translator.translate(text, dest='en')
+    return translated_text.text
+
+
 
 def extract_main_idea(text):
     # Обработка текста с помощью spaCy
@@ -28,7 +37,7 @@ def extract_main_idea(text):
     # Возвращаем результат в виде ключевых фраз
     return key_phrases
 
-
+#Переработка фразы
 def process_sentences(sentences):
     phrases = []
 
@@ -78,6 +87,31 @@ def process_sentences(sentences):
         new_phrases.append(new_phrase)
 
     return new_phrases
+
+#
+def check_phrases(phrases):
+    phrases_to_move = []
+
+    for phrase in phrases:
+        # Проверка наличия фразы в словосочетании
+        if "выглядит как" in phrase.lower() or \
+        "внешность" in phrase.lower() or \
+        "внешностью" in phrase.lower() or \
+        "внешне" in phrase.lower():
+            phrases_to_move.append(phrase)
+
+    # Перемещение фраз в начало списка
+    for phrase in phrases_to_move:
+        phrases.remove(phrase)
+        phrases.insert(0, phrase)
+
+    return phrases
+
+#Объединение Промпта
+def add_phrases_to_string(input_string, phrases):
+    phrases_string = ', '.join(phrases)
+    output_string = input_string + ', ' + phrases_string
+    return output_string
 
 
 # Пример использования
