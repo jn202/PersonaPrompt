@@ -1,7 +1,7 @@
 from Def.List_sentense import _list_sentensis
 from Def.Phrases_work import *
 from Def.Translator_Method import translate_to_english
-
+from Def.send_mechanizm import *
 from tkinter import Tk, Text,Frame, Button, Label, messagebox
 
 '''
@@ -31,6 +31,11 @@ def analyze_text():
     label1.config(text=Rus_prompt)
     label2.config(text=Translated_prompt)
 
+def send_text():
+    selected_text = label1.cget("text") or label2.cget("text")
+    root.clipboard_clear()
+    root.clipboard_append(selected_text)
+    messagebox.showinfo("Отправка текста", "Текст отправлен")
 
 def copy_text():
     selected_text = label1.cget("text") or label2.cget("text")
@@ -72,6 +77,9 @@ label2 = Label(label_frame, text="", height=label_height, wraplength=380, justif
 label2.pack(fill="both", expand=True)
 
 copy_button = Button(root, text="Копировать", command=copy_text)
-copy_button.pack()
+copy_button.pack(side="left", padx=10)
+
+send_button = Button(root, text="Отправить текст", command=send_text)
+send_button.pack(side="right", padx=10)
 
 root.mainloop()
