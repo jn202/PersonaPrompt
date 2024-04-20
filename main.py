@@ -1,7 +1,7 @@
 from Def.List_sentense import _list_sentensis
 from Def.Phrases_work import *
 from Def.Translator_Method import translate_to_english
-from Def.send_mechanizm import *
+import requests
 from tkinter import Tk, Text,Frame, Button, Label, messagebox
 
 '''
@@ -31,12 +31,6 @@ def analyze_text():
     label1.config(text=Rus_prompt)
     label2.config(text=Translated_prompt)
 
-def send_text():
-    selected_text = label1.cget("text") or label2.cget("text")
-    root.clipboard_clear()
-    root.clipboard_append(selected_text)
-    messagebox.showinfo("Отправка текста", "Текст отправлен")
-
 def copy_text():
     selected_text = label1.cget("text") or label2.cget("text")
     root.clipboard_clear()
@@ -47,6 +41,23 @@ def paste_text():
     clipboard_text = root.clipboard_get()
     input_text.delete("1.0", "end")
     input_text.insert("1.0", clipboard_text)
+
+def send_text():
+    selected_text = label2.cget("text")
+    root.clipboard_clear()
+    root.clipboard_append(selected_text)
+    # URL-адрес для отправки prompt во вкладке txt2img Stable Diffusion
+    url = "http://127.0.0.1:7860/api/prompt"
+    # Строка prompt для отправки
+    prompt_string = selected_text
+    # Отправка POST запроса с использованием библиотеки requests
+    response = requests.post(url, data={"txt2img": prompt_string})
+    # Проверка успешности отправки
+    if response.status_code == 200:
+        answer = "Строка prompt успешно отправлена в Stable Diffusion во вкладке txt2img."
+    else:
+        answer = "Произошла ошибка при отправке строки prompt."
+    messagebox.showinfo("Ответ", answer)
 
 root = Tk()
 root.title("PersonaPrompt")
