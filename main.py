@@ -32,7 +32,8 @@ def analyze_text():
     label2.config(text=Translated_prompt)
 
 def copy_text():
-    selected_text = label1.cget("text") or label2.cget("text")
+    #selected_text = label1.cget("text") or label2.cget("text")
+    selected_text = label2.cget("text")
     root.clipboard_clear()
     root.clipboard_append(selected_text)
     messagebox.showinfo("Копирование", "Текст скопирован в буфер обмена")
@@ -47,11 +48,14 @@ def send_text():
     root.clipboard_clear()
     root.clipboard_append(selected_text)
     # URL-адрес для отправки prompt во вкладке txt2img Stable Diffusion
-    url = "http://127.0.0.1:7860/api/prompt"
+    url = "http://127.0.0.1:7860/sdapi/v1/txt2img"
     # Строка prompt для отправки
     prompt_string = selected_text
     # Отправка POST запроса с использованием библиотеки requests
-    response = requests.post(url, data={"txt2img": prompt_string})
+    payload = {'prompt': prompt_string}
+
+    response = requests.post(url, json=payload)
+
     # Проверка успешности отправки
     if response.status_code == 200:
         answer = "Строка prompt успешно отправлена в Stable Diffusion во вкладке txt2img."
