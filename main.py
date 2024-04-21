@@ -1,9 +1,8 @@
 from Def.List_sentense import _list_sentensis
 from Def.Phrases_work import *
 from Def.Translator_Method import translate_to_english
-import requests
+import requests, base64, os
 from tkinter import Tk, Text,Frame, Button, Label, messagebox
-
 '''
 # Пример фразы
 input_text = """
@@ -52,7 +51,8 @@ def send_text():
     # Строка prompt для отправки
     prompt_string = selected_text
     # Отправка POST запроса с использованием библиотеки requests
-    payload = {'prompt': prompt_string}
+    payload = {'prompt': prompt_string,
+               'steps': 30}
 
     response = requests.post(url, json=payload)
 
@@ -62,6 +62,30 @@ def send_text():
     else:
         answer = "Произошла ошибка при отправке строки prompt."
     messagebox.showinfo("Ответ", answer)
+    response_json = response.json()
+
+
+
+    # Получить список всех файлов в папке
+    files = os.listdir("Images")
+
+    # Подсчитать количество файлов JPG
+    num_jpg_files = 0
+    for file in files:
+        # Извлечь расширение файла
+        file_ext = os.path.splitext(file)[1].lower()
+
+        # Проверить, является ли расширение файла ".jpg"
+        if file_ext == ".jpg":
+            num_jpg_files += 1
+
+
+    # сохранение файлов JPG
+    img_name=os.path.join("Images", f"image_{num_jpg_files+1}.jpg")
+    with open(img_name, 'wb') as f:
+        f.write(base64.b64decode(response_json['images'][0]))
+    os.startfile(img_name)
+
 
 root = Tk()
 root.title("PersonaPrompt")
