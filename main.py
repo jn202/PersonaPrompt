@@ -3,6 +3,7 @@ from Def.Phrases_work import *
 from Def.Translator_Method import translate_to_english
 import requests, base64, os
 from tkinter import Tk, Text,Frame, Button, Label, messagebox
+
 '''
 # Пример фразы
 input_text = """
@@ -71,7 +72,6 @@ def send_text():
 
     # Подсчитать количество файлов JPG
     num_jpg_files = 0
-
 
     for filename in files:
         # Разбиваем название файла по '_' и '.jpg'
