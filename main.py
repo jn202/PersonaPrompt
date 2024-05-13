@@ -7,6 +7,8 @@ from tkinter import Tk, Text,Frame, Button, Label, messagebox
 # Пример фразы
 input_text = """
 Высокий прямоходящий муравей-химера с преобладанием черт гепарда. Конечности сегментированы, как у насекомого, ступни и ладони четырёхпалые с парными когтями. Туловище сухое мускулистое, с длинными жилами. Основной окрас желтый, на бёдрах и груди белый мех с черными леопардовыми пятнышками. Волосы малиновые короткие, на лице-морде слезные дорожки, как у гепарда. Из одежды на Читу только обрезанные джинсовые мини-шортики.
+
+Сон Джин Ву - персонаж из манхвы Solo Leveling. Работает "Охотником". Суть работы заключается в уничтожении монстров из порталов. По национальности - Южный Кореец. Рост высокий, телосложение спортивное. Цвет волос чёрный, глаза ярко синие. Длина волос средняя. Одет обычно в чёрное пальто, черную рубашку, чёрные брюки и чёрные туфли. Обладает силой управлять тенями, поэтому часто появляется с особой теневой аурой. 
 """'''
 
 
@@ -31,7 +33,7 @@ def analyze_text():
     label2.config(text=Translated_prompt)
 
 def copy_text():
-    #selected_text = label1.cget("text") or label2.cget("text")
+    # selected_text = label1.cget("text") or label2.cget("text")
     selected_text = label2.cget("text")
     root.clipboard_clear()
     root.clipboard_append(selected_text)
@@ -64,21 +66,22 @@ def send_text():
     messagebox.showinfo("Ответ", answer)
     response_json = response.json()
 
-
-
     # Получить список всех файлов в папке
     files = os.listdir("Images")
 
     # Подсчитать количество файлов JPG
     num_jpg_files = 0
-    for file in files:
-        # Извлечь расширение файла
-        file_ext = os.path.splitext(file)[1].lower()
 
-        # Проверить, является ли расширение файла ".jpg"
-        if file_ext == ".jpg":
-            num_jpg_files += 1
 
+    for filename in files:
+        # Разбиваем название файла по '_' и '.jpg'
+        parts = filename.split('_')[1].split('.')[0]
+
+        # Проверяем, является ли часть названия числом
+        if parts.isdigit():
+            number = int(parts)
+            if number > num_jpg_files:
+                num_jpg_files = number
 
     # сохранение файлов JPG
     img_name=os.path.join("Images", f"image_{num_jpg_files+1}.jpg")
